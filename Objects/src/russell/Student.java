@@ -170,6 +170,9 @@ public class Student implements Comparable{
 		}
 		return false;
 	}
+	public String toString(){
+		return getFirstName() + "/" + getLastName() + "/" + getAddress() + "/" + getCity() + "/" + getProvince() + "/" + getPostalCode() + "/" + getPhoneNumber() + "/" + getBirthday() + "/" + getStudentNumber();
+	}
 	@Override
 	public int compareTo(Object arg0) {
 		Student temp = (Student) arg0;
