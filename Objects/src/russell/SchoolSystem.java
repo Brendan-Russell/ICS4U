@@ -1,5 +1,11 @@
 package russell;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -7,6 +13,7 @@ import java.util.Scanner;
 public class SchoolSystem {
 	static Scanner scan = new Scanner(System.in);
 	static ArrayList<Student> studRecs = new ArrayList<Student>();
+
 	public static void addStudent(){
 		String input, firstInput;
 		String firstName = "", lastName = "", address, city, province, postalCode, phoneNumber, birthday;
@@ -118,14 +125,81 @@ public class SchoolSystem {
 		}
 		studRecs.trimToSize();
 	}
-	
+
 	public static void quit(){
 		System.exit(0);
 	}
-
-	@SuppressWarnings("unchecked")
-	public static void main(String[] args) throws InterruptedException {
+	public static void load(){
+		try{
+			String fileName = "src/russell/Students";
+			String fNumStudents = "src/russell/NumStudents.txt";
+			String input = "";
+			File file = new File(fileName);
+			BufferedReader fbr = new BufferedReader(new FileReader(fileName));
+			File stuFile = new File(fNumStudents);
+			BufferedReader sfbr = new BufferedReader(new FileReader(fNumStudents));
+			if(!file.exists()){
+				file.createNewFile();
+			}
+			if(!stuFile.exists()){
+				stuFile.createNewFile();
+			}
+			input = sfbr.readLine();
+			if(Character.isDigit(input.toCharArray()[0])){
+				int numStudents = Integer.parseInt(input);
+				String[] studentInfo = new String[numStudents];
+				if(numStudents!=0){
+					for(int i=0; i<numStudents; i++){
+						studentInfo[i] = fbr.readLine();
+					}
+					for(int i=0; i<numStudents; i++){
+						if(studentInfo[i].split("/")[0]==null){
+							studRecs.add(new Student(Long.parseLong(studentInfo[i].split("/")[8])));
+						}
+						else if(studentInfo[i].split("/")[2]==null){
+							studRecs.add(new Student(studentInfo[i].split("/")[0], studentInfo[i].split("/")[1], Long.parseLong(studentInfo[i].split("/")[8])));
+						}
+						else{
+							studRecs.add(new Student(studentInfo[i].split("/")[0], studentInfo[i].split("/")[1], studentInfo[i].split("/")[2], studentInfo[i].split("/")[3], studentInfo[i].split("/")[4], studentInfo[i].split("/")[5], studentInfo[i].split("/")[6], studentInfo[i].split("/")[7],  Long.parseLong(studentInfo[i].split("/")[8])));
+						}
+					}
+				}
+			}
+			fbr.close();
+			sfbr.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	public static void save(){
+		try{
+			String fileName = "src/russell/Students.txt";
+			String fNumStudents = "src/russell/NumStudents.txt";
+			File file = new File(fileName);
+			File stuFile = new File(fNumStudents);
+			if(!file.exists()){
+				file.createNewFile();
+			}
+			if(!stuFile.exists()){
+				stuFile.createNewFile();
+			}
+			FileOutputStream fos = new FileOutputStream(fileName);
+			PrintStream fps = new PrintStream(fos);
+			FileOutputStream sfos = new FileOutputStream(fNumStudents);
+			PrintStream sfps = new PrintStream(sfos);
+			for(int i=0; i<studRecs.size(); i++){
+				fps.println(studRecs.get(i).toString());
+			}
+			sfps.println(studRecs.size());
+			sfps.close();
+			fps.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	public static void main(String[] args){		
 		String input;
+		load();
 		do{
 			System.out.println("Choose one of the following options:\n1. Enter a new student\n2. Print out a student's information\n3. Print information of all students\n4. Delete a student\n5. Sort all students by last name\n10. Quit");
 			input = scan.nextLine();
@@ -145,6 +219,7 @@ public class SchoolSystem {
 			else if(input.equals("2")){
 				if(studRecs.size()==0){
 					System.out.println("There are no students in the database");
+					input = "1";
 				}
 				else if(studRecs.size()>1){
 					System.out.println("Which student do you want to print? (Enter their student number)");
@@ -169,6 +244,7 @@ public class SchoolSystem {
 			else if(input.equals("4")){
 				if(studRecs.size()==0){
 					System.out.println("There are no students in the database");
+					input = "1";
 				}
 				else if(studRecs.size()>1){
 					System.out.println("Which student do you want to delete? (Enter their student number)");
@@ -185,10 +261,18 @@ public class SchoolSystem {
 			else if(input.equals("5")){
 				Collections.sort(studRecs);
 			}
-			if(!input.equals("1")&&!input.equals("5")&&!input.equals("10")){
-				Thread.sleep(5000);
+			else if(input.equals("6")){
+				save();
+			}	
+			if(input.equals("2")||input.equals("3")||input.equals("4")){
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}while(!input.equals("10"));
+		save();
 		quit();
 		scan.close();
 	}

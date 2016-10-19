@@ -2,8 +2,7 @@ package russell;
 
 import java.util.Calendar;
 
-@SuppressWarnings("rawtypes")
-public class Student implements Comparable{
+public class Student implements Comparable <Student>{
 	private String firstName, lastName, address, city, province, postalCode, phoneNumber, birthday;
 	private long studentNumber;
 	private static long idGenerator = 300000000;
@@ -11,11 +10,19 @@ public class Student implements Comparable{
 		setStudentNumber(idGenerator);
 		idGenerator++;
 	}
+	public Student(long iStudentNumber){
+		setStudentNumber(iStudentNumber);
+	}
 	public Student(String iFirstName, String iLastName){
 		setFirstName(iFirstName);
 		setLastName(iLastName);
 		setStudentNumber(idGenerator);
 		idGenerator++;
+	}
+	public Student(String iFirstName, String iLastName, long iStudentNumber){
+		setFirstName(iFirstName);
+		setLastName(iLastName);
+		setStudentNumber(iStudentNumber);
 	}
 	public Student(String iFirstName, String iLastName, String iAddress, String iCity, String iProvince, String iPostalCode, String iPhoneNumber, String iBirthday){
 		setFirstName(iFirstName);
@@ -28,6 +35,17 @@ public class Student implements Comparable{
 		setBirthday(iBirthday);
 		setStudentNumber(idGenerator);
 		idGenerator++;
+	}
+	public Student(String iFirstName, String iLastName, String iAddress, String iCity, String iProvince, String iPostalCode, String iPhoneNumber, String iBirthday, long iStudentNumber){
+		setFirstName(iFirstName);
+		setLastName(iLastName);
+		setAddress(iAddress);
+		setCity(iCity);
+		setProvince(iProvince);
+		setPostalCode(iPostalCode);
+		setPhoneNumber(iPhoneNumber);
+		setBirthday(iBirthday);
+		setStudentNumber(iStudentNumber);
 	}
 	public void setFirstName(String name){
 		this.firstName = name;
@@ -165,17 +183,15 @@ public class Student implements Comparable{
 		return this.studentNumber;
 	}
 	public boolean equals(Student s){
-		if(this.getStudentNumber() == s.getStudentNumber()){
-			return true;
-		}
-		return false;
+		return this.getStudentNumber() == s.getStudentNumber();
 	}
 	public String toString(){
 		return getFirstName() + "/" + getLastName() + "/" + getAddress() + "/" + getCity() + "/" + getProvince() + "/" + getPostalCode() + "/" + getPhoneNumber() + "/" + getBirthday() + "/" + getStudentNumber();
 	}
-	@Override
-	public int compareTo(Object arg0) {
-		Student temp = (Student) arg0;
-		return this.getLastName().compareTo(temp.getLastName());
+	public int compareTo(Student arg0) {
+		if(this.getLastName().compareTo(arg0.getLastName())==0){
+			return this.getFirstName().compareTo(arg0.getFirstName());
+		}
+		return this.getLastName().compareTo(arg0.getLastName());
 	}
 }
