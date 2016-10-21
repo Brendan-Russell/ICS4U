@@ -156,6 +156,7 @@ public class SchoolSystem {
 					for(int i=0; i<numStudents; i++){
 						studentInfo[i] = fbr.readLine();
 					}
+					Student.idGenerator = Integer.parseInt(studentInfo[studentInfo.length-1].split("/")[8])+1;
 					for(int i=0; i<numStudents; i++){
 						if(studentInfo[i].split("/")[0].equals("nothing")){
 							studRecs.add(new Student(Long.parseLong(studentInfo[i].split("/")[8])));
@@ -233,7 +234,12 @@ public class SchoolSystem {
 				}
 				else if(studRecs.size()>1){
 					System.out.println("Which student do you want to print? (Enter their student number)");
-					long stuNum = Long.parseLong(scan.nextLine());
+					String tryInput = scan.nextLine();
+					while(!Character.isDigit(tryInput.toCharArray()[0])){
+						System.out.println("Please enter a number");
+						tryInput = scan.nextLine();
+					}
+					long stuNum = Long.parseLong(tryInput);
 					if(!trySearchStudents(stuNum)){
 						main(args);
 					}
@@ -258,7 +264,12 @@ public class SchoolSystem {
 				}
 				else if(studRecs.size()>1){
 					System.out.println("Which student do you want to delete? (Enter their student number)");
-					long stuNum = Long.parseLong(scan.nextLine());
+					String tryInput = scan.nextLine();
+					while(!Character.isDigit(tryInput.toCharArray()[0])){
+						System.out.println("Please enter a number");
+						tryInput = scan.nextLine();
+					}
+					long stuNum = Long.parseLong(tryInput);
 					if(!trySearchStudents(stuNum)){
 						main(args);
 					}
