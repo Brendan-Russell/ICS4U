@@ -38,7 +38,11 @@ public class SchoolSystem {
 			}
 			address = input;
 			System.out.println("What province does the student live in?");
-			province = scan.nextLine();
+			input = scan.nextLine();
+			while(!Student.trySetProvince(input)){
+				input = scan.nextLine();
+			}
+			province = input;
 			System.out.println("What city does the student live in?");
 			city = scan.nextLine();
 			System.out.println("What is the student's postal code? (X1X 1X1)");
@@ -67,11 +71,11 @@ public class SchoolSystem {
 		}
 	}
 	public static void printStudent(Student student){
-		if(student.getFirstName()==null){
+		if(student.getFirstName()==null||student.getFirstName().equals("nothing")){
 			System.out.println("This student has no information");
 			System.out.println("Student Number: " + student.getStudentNumber() + "\n");
 		}
-		else if(student.getAddress()==null){
+		else if(student.getAddress()==null||student.getAddress().equals("nothing")){
 			System.out.println("\nName: " + student.getFirstName() + " " + student.getLastName());
 			System.out.println("Student Number: " + student.getStudentNumber() + "\n");
 		}
@@ -131,7 +135,7 @@ public class SchoolSystem {
 	}
 	public static void load(){
 		try{
-			String fileName = "src/russell/Students";
+			String fileName = "src/russell/Students.txt";
 			String fNumStudents = "src/russell/NumStudents.txt";
 			String input = "";
 			File file = new File(fileName);
@@ -145,7 +149,7 @@ public class SchoolSystem {
 				stuFile.createNewFile();
 			}
 			input = sfbr.readLine();
-			if(Character.isDigit(input.toCharArray()[0])){
+			if(Integer.parseInt(input)!=0){
 				int numStudents = Integer.parseInt(input);
 				String[] studentInfo = new String[numStudents];
 				if(numStudents!=0){
@@ -153,10 +157,10 @@ public class SchoolSystem {
 						studentInfo[i] = fbr.readLine();
 					}
 					for(int i=0; i<numStudents; i++){
-						if(studentInfo[i].split("/")[0]==null){
+						if(studentInfo[i].split("/")[0].equals("nothing")){
 							studRecs.add(new Student(Long.parseLong(studentInfo[i].split("/")[8])));
 						}
-						else if(studentInfo[i].split("/")[2]==null){
+						else if(studentInfo[i].split("/")[2].equals("nothing")){
 							studRecs.add(new Student(studentInfo[i].split("/")[0], studentInfo[i].split("/")[1], Long.parseLong(studentInfo[i].split("/")[8])));
 						}
 						else{
@@ -188,6 +192,12 @@ public class SchoolSystem {
 			FileOutputStream sfos = new FileOutputStream(fNumStudents);
 			PrintStream sfps = new PrintStream(sfos);
 			for(int i=0; i<studRecs.size(); i++){
+				if(studRecs.get(i).getFirstName()==null){
+					studRecs.get(i).setFirstName("nothing");
+				}
+				if(studRecs.get(i).getAddress()==null){
+					studRecs.get(i).setAddress("nothing");
+				}
 				fps.println(studRecs.get(i).toString());
 			}
 			sfps.println(studRecs.size());

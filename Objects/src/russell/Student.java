@@ -3,7 +3,8 @@ package russell;
 import java.util.Calendar;
 
 public class Student implements Comparable <Student>{
-	private String firstName, lastName, address, city, province, postalCode, phoneNumber, birthday;
+	private String firstName, lastName, address, city, postalCode, phoneNumber, birthday;
+	private Province province;
 	private long studentNumber;
 	private static long idGenerator = 300000000;
 	public Student(){
@@ -11,6 +12,7 @@ public class Student implements Comparable <Student>{
 		idGenerator++;
 	}
 	public Student(long iStudentNumber){
+		setFirstName("nothing");
 		setStudentNumber(iStudentNumber);
 	}
 	public Student(String iFirstName, String iLastName){
@@ -22,6 +24,7 @@ public class Student implements Comparable <Student>{
 	public Student(String iFirstName, String iLastName, long iStudentNumber){
 		setFirstName(iFirstName);
 		setLastName(iLastName);
+		setAddress("nothing");
 		setStudentNumber(iStudentNumber);
 	}
 	public Student(String iFirstName, String iLastName, String iAddress, String iCity, String iProvince, String iPostalCode, String iPhoneNumber, String iBirthday){
@@ -82,10 +85,16 @@ public class Student implements Comparable <Student>{
 	public String getCity(){
 		return this.city;
 	}
-	public void setProvince(String province){
-		this.province = province;
+	public static boolean trySetProvince(String province){
+		if(parseProvince(province)==null){
+			return false;
+		}
+		return true;
 	}
-	public String getProvince(){
+	public void setProvince(String province){
+		this.province = parseProvince(province);
+	}
+	public Province getProvince(){
 		return this.province;
 	}
 	public static boolean trySetPostalCode(String code){
@@ -193,5 +202,56 @@ public class Student implements Comparable <Student>{
 			return this.getFirstName().compareTo(arg0.getFirstName());
 		}
 		return this.getLastName().compareTo(arg0.getLastName());
+	}
+	public static Province parseProvince(String string){
+		string = string.toLowerCase();
+		switch(string){
+			case"bc":
+			case"british columbia":
+				return Province.BC;
+			case"ab":
+			case"alberta":
+				return Province.AB;
+			case"sk":
+			case"saskatchewan":
+				return Province.SK;
+			case"mb":
+			case"manitoba":
+				return Province.MB;
+			case"on":
+			case"ontario":
+				return Province.BC;
+			case"qc":
+			case"quebec":
+				return Province.AB;
+			case"nl":
+			case"newfoundland and labrador":
+			case"newfoundland":
+			case"labrador":
+				return Province.NL;
+			case"ns":
+			case"nova scotia":
+				return Province.NS;
+			case"pe":
+			case"pei":
+			case"prince edward island":
+				return Province.PE;
+			case"nb":
+			case"new brunswick":
+				return Province.NB;
+			case"yt":
+			case"yukon":
+			case"yukon territories":
+				return Province.YT;
+			case"nt":
+			case"nwt":
+			case"northwest territories":
+				return Province.NT;
+			case"nu":
+			case"nunavut":
+				return Province.NU;
+			default:
+				return null;
+		}
 	}
 }
