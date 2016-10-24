@@ -6,7 +6,7 @@ public class Student implements Comparable <Student>{
 	private String firstName, lastName, address, city, postalCode, phoneNumber, birthday;
 	private Province province;
 	private long studentNumber;
-	private static long idGenerator = 300000000;
+	public static long idGenerator = 300000000;
 	public Student(){
 		setStudentNumber(idGenerator);
 		idGenerator++;
